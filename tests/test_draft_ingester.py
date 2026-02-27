@@ -92,14 +92,15 @@ class TestFrontmatterParsing:
         assert len(body) > 100
 
     @pytest.mark.skipif(not HAS_DRAFTS, reason="04-Blog-Drafts not found")
-    def test_parse_real_week01_no_frontmatter(self, ingester):
-        """Parse a real Week-01 file (no frontmatter)."""
+    def test_parse_real_week01_with_frontmatter(self, ingester):
+        """Parse a real Week-01 file (now has YAML frontmatter)."""
         filepath = Path(DRAFTS_DIR) / "Week-01" / "day-03-why-92-percent-sales-processes-fail.md"
         if not filepath.exists():
             pytest.skip("day-03 file not found")
         metadata, body = ingester.parse_frontmatter(filepath)
-        assert metadata == {}
-        assert body.startswith("# Why 92%")
+        assert metadata.get("slug") == "why-92-percent-sales-processes-fail"
+        assert metadata.get("focus_keyword") == "why sales processes fail"
+        assert len(body) > 100
 
 
 # ===========================================================================
