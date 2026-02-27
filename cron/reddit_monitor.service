@@ -1,0 +1,17 @@
+[Unit]
+Description=RevHeat Reddit Monitor
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=revheat
+WorkingDirectory=/home/revheat/revheat-blog-engine
+Environment=PATH=/home/revheat/revheat-blog-engine/venv/bin:/usr/bin
+ExecStart=/home/revheat/revheat-blog-engine/venv/bin/python scripts/run_reddit_monitor.py
+StandardOutput=append:/home/revheat/revheat-blog-engine/logs/reddit.log
+StandardError=append:/home/revheat/revheat-blog-engine/logs/reddit_error.log
+TimeoutStartSec=300
+
+[Install]
+WantedBy=multi-user.target

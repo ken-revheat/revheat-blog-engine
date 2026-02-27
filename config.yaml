@@ -1,0 +1,67 @@
+# RevHeat Blog Engine Configuration
+
+site:
+  name: "RevHeat"
+  url: "https://revheat.com"
+  blog_base: "https://revheat.com/blog/"
+  author: "Ken Lundin"
+  author_title: "Founder & CEO, RevHeat"
+  organization: "RevHeat"
+
+content:
+  drafts_dir: "../04-Blog-Drafts"    # Cowork-authored drafts, consumed before API generation
+  prefer_existing_drafts: true        # Check backlog before API generation
+  min_word_count: 1200
+  max_word_count: 2000
+  target_word_count: 1500
+  faq_min_items: 5
+  tldr_bullet_count: 4
+  stat_density: 175  # One stat per N words
+  max_internal_links: 5
+  min_internal_links: 3
+
+  daily_rotation:
+    monday: "data_insight"
+    tuesday: "how_to"
+    wednesday: "myth_buster"
+    thursday: "comparison"
+    friday: "case_study"
+    saturday: null  # No publish
+    sunday: null    # No publish
+
+claude:
+  model: "claude-sonnet-4-5-20250929"
+  max_tokens: 4000
+  temperature: 0.7
+
+scheduling:
+  publish_hour: 9       # 9 AM local
+  random_offset_min: 0
+  random_offset_max: 180  # minutes
+  timezone: "America/New_York"
+
+  # Burst mode: publish multiple posts/day for pillar + cluster pages
+  # Runs N posts per execution until all pillar/cluster pages are live,
+  # then falls back to 1 post/day for weekly blog posts.
+  burst_mode: true
+  burst_posts_per_day: 4         # Pillar + cluster pages per daily run
+  burst_folders:                 # Only burst-publish from these folders
+    - "Pillar-Pages"
+    - "Cluster-Pages"
+
+reddit:
+  max_daily_responses: 3
+  min_score_for_draft: 50
+  daily_brief_recipients:
+    - "kglundin@gmail.com"
+
+image:
+  compression_quality: 85
+  retina_scale: 2
+  watermark_opacity: 0.3
+  border_width: 2
+
+logging:
+  level: "INFO"
+  format: "json"
+  log_dir: "logs"

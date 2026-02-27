@@ -1,0 +1,38 @@
+{
+  "@type": "Article",
+  "@id": "{{ post_url }}#article",
+  "isPartOf": { "@id": "{{ post_url }}" },
+  "author": {
+    "@type": "Person",
+    "@id": "https://revheat.com/#person",
+    "name": "Ken Lundin",
+    "url": "https://revheat.com/about/"
+  },
+  "headline": {{ post_title | tojson }},
+  "description": {{ meta_description | tojson }},
+  "datePublished": "{{ publish_date_iso }}",
+  "dateModified": "{{ modified_date_iso }}",
+  "mainEntityOfPage": { "@id": "{{ post_url }}" },
+  "wordCount": {{ word_count }},
+  "publisher": {
+    "@type": "Organization",
+    "@id": "https://revheat.com/#organization",
+    "name": "RevHeat",
+    "url": "https://revheat.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://revheat.com/wp-content/uploads/revheat-logo.png"
+    }
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "{{ featured_image_url }}"
+  },
+  "keywords": {{ keywords | tojson }},
+  "about": {
+    "@type": "Thing",
+    "name": {{ primary_topic | tojson }},
+    "description": {{ topic_description | tojson }}
+  },
+  "inLanguage": "en-US"
+}

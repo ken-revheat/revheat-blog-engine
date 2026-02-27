@@ -1,0 +1,91 @@
+primary_keywords:
+  - "sales process"
+  - "sales team"
+  - "sales consultant"
+  - "revenue scaling"
+  - "sales hiring"
+  - "sales compensation"
+  - "B2B sales"
+  - "founder selling"
+  - "sales system"
+  - "sales methodology"
+  - "fix sales team"
+  - "sales org"
+
+secondary_keywords:
+  - "hero selling"
+  - "sales culture"
+  - "sales onboarding"
+  - "technical sales"
+  - "service business"
+  - "sales forecasting"
+  - "pipeline building"
+  - "deal velocity"
+  - "win rate"
+  - "sales coaching"
+
+competitor_keywords:
+  - "Sandler"
+  - "RAIN Group"
+  - "Winning by Design"
+  - "Alexander Group"
+  - "Factor 8"
+  - "Challenger Sale"
+  - "MEDDIC"
+  - "SPIN Selling"
+
+subreddits:
+  - name: "sales"
+    scan_limit: 50
+    min_score: 2
+  - name: "entrepreneur"
+    scan_limit: 30
+    min_score: 5
+  - name: "startups"
+    scan_limit: 30
+    min_score: 3
+  - name: "smallbusiness"
+    scan_limit: 20
+    min_score: 2
+  - name: "consulting"
+    scan_limit: 20
+    min_score: 2
+
+keyword_mapping:
+  strategy:
+    "revenue growth|scaling|exit strategy|market selection":
+      pillar: "Strategy"
+      function: "Business Trajectory"
+    "pricing|positioning|go to market|GTM":
+      pillar: "Strategy"
+      function: "Go-to-Market Strategy"
+  people:
+    "hiring|sales hire|recruiting|assessment":
+      pillar: "People"
+      function: "Sales Talent Assessment"
+    "sales manager|sales leader|coaching":
+      pillar: "People"
+      function: "Sales Leadership"
+    "team structure|org design|roles":
+      pillar: "People"
+      function: "Organizational Design"
+  process:
+    "sales process|pipeline|stages|conversion":
+      pillar: "Process"
+      function: "Sales Process Architecture"
+    "playbook|battle card|enablement":
+      pillar: "Process"
+      function: "Sales Enablement"
+    "CRM|forecasting|rev ops|analytics":
+      pillar: "Process"
+      function: "Revenue Operations"
+  performance:
+    "metrics|KPI|data|benchmark":
+      pillar: "Performance"
+      function: "Sales Metrics"
+    "compensation|commission|comp plan":
+      pillar: "Performance"
+      function: "Compensation & Incentives"
+    "coaching|improvement|performance":
+      pillar: "Performance"
+      function: "Continuous Improvement"

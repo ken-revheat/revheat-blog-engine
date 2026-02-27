@@ -1,0 +1,17 @@
+[Unit]
+Description=RevHeat Daily Content Engine
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=revheat
+WorkingDirectory=/home/revheat/revheat-blog-engine
+Environment=PATH=/home/revheat/revheat-blog-engine/venv/bin:/usr/bin
+ExecStart=/home/revheat/revheat-blog-engine/venv/bin/python scripts/run_daily.py
+StandardOutput=append:/home/revheat/revheat-blog-engine/logs/daily.log
+StandardError=append:/home/revheat/revheat-blog-engine/logs/daily_error.log
+TimeoutStartSec=600
+
+[Install]
+WantedBy=multi-user.target

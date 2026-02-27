@@ -1,0 +1,38 @@
+# RevHeat Brand Colors and Typography
+# Extracted from revheat.com — February 2026
+
+colors:
+  primary: "#3b4fe4"           # RevHeat blue (buttons, links, accents)
+  secondary: "#243673"         # Dark blue (footer, hover states)
+  accent: "#6e7180"            # Medium gray (body text, secondary)
+  background: "#ffffff"        # White (card/page backgrounds)
+  background_alt: "#e2e5e7"    # Light gray (subtle backgrounds)
+  text_dark: "#1a1a1a"         # Dark charcoal (headings, primary text)
+  text_body: "#6e7180"         # Medium gray (body/secondary text)
+  text_light: "#ffffff"        # White (text on dark backgrounds)
+  hover: "#243673"             # Dark blue (button/link hover)
+  chart_colors:
+    - "#3b4fe4"                # Primary blue
+    - "#243673"                # Dark blue
+    - "#2A9D8F"                # Teal (complementary)
+    - "#E9C46A"                # Gold (contrast)
+    - "#1a1a1a"                # Charcoal
+
+typography:
+  heading_font: "Poppins"       # Headings — weight 600
+  body_font: "Open Sans"        # Body text — weight 400
+  data_font: "Roboto Mono"      # Numbers in charts
+
+dimensions:
+  featured_image:
+    width: 1200
+    height: 627
+  square:
+    width: 1080
+    height: 1080
+  chart:
+    width: 800
+    height: 500
+  infographic:
+    width: 800
+    height: 1200

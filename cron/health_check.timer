@@ -1,0 +1,10 @@
+[Unit]
+Description=Run RevHeat Health Check Hourly
+
+[Timer]
+OnCalendar=*-*-* *:00:00
+Persistent=true
+Unit=health_check.service
+
+[Install]
+WantedBy=timers.target

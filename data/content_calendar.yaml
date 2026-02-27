@@ -1,0 +1,13 @@
+# Content Calendar — Pre-planned topics by date
+# Format: YYYY-MM-DD: topic details
+# If no entry for a date, the engine auto-selects from the content map
+
+scheduled: []
+# Example:
+#  - date: "2026-03-15"
+#    topic: "Why 92% of Sales Processes Fail"
+#    primary_keyword: "why sales processes fail"
+#    secondary_keywords: ["sales system", "sales optimization"]
+#    format_type: "data_insight"
+#    smartscaling_pillar: "process"
+#    smartscaling_function: "Sales Process Architecture"

@@ -1,0 +1,32 @@
+# RevHeat Blog Engine — Python Dependencies
+
+# Core
+anthropic>=0.40.0           # Claude API for content generation
+requests>=2.31.0            # HTTP client for WordPress + other APIs
+python-dotenv>=1.0.0        # Environment variable management
+pyyaml>=6.0                 # YAML config parsing
+
+# Content Processing
+jinja2>=3.1.0               # Template rendering for Schema + prompts
+markdown>=3.5.0             # Markdown -> HTML conversion
+beautifulsoup4>=4.12.0      # HTML parsing for internal linking
+python-slugify>=8.0.0       # URL-safe slug generation
+
+# Image Pipeline
+matplotlib>=3.8.0           # Data visualization charts
+Pillow>=10.0.0              # Image processing + brand templating
+
+# Reddit Monitoring
+praw>=7.7.0                 # Python Reddit API Wrapper
+feedparser>=6.0.0           # RSS fallback for Reddit monitoring
+
+# Schema Validation
+jsonschema>=4.0.0           # JSON Schema validation
+
+# Testing
+pytest>=7.4.0               # Test framework
+pytest-cov>=4.1.0           # Test coverage
+responses>=0.24.0           # Mock HTTP responses for testing
+
+# Utilities
+python-dateutil>=2.8.0      # Date handling

@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Reddit Monitor Daily at 5 AM EST
+
+[Timer]
+OnCalendar=*-*-* 10:00:00
+Persistent=true
+Unit=reddit_monitor.service
+
+[Install]
+WantedBy=timers.target

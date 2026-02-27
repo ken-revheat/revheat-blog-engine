@@ -1,0 +1,19 @@
+{
+  "@type": "HowTo",
+  "@id": "{{ post_url }}#howto",
+  "name": {{ title | tojson }},
+  "description": {{ description | tojson }},
+  "estimatedCost": { "@type": "MonetaryAmount", "currency": "USD", "value": "0" },
+  {% if estimated_time %}"totalTime": "{{ estimated_time }}",{% endif %}
+  "step": [
+    {% for step in steps %}
+    {
+      "@type": "HowToStep",
+      "position": {{ loop.index }},
+      "name": {{ step.title | tojson }},
+      "text": {{ step.description | tojson }}{% if step.image_url %},
+      "image": "{{ step.image_url }}"{% endif %}
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}

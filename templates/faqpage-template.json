@@ -1,0 +1,16 @@
+{
+  "@type": "FAQPage",
+  "@id": "{{ post_url }}#faq",
+  "mainEntity": [
+    {% for item in faq_items %}
+    {
+      "@type": "Question",
+      "name": {{ item.question | tojson }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ item.answer | tojson }}
+      }
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}

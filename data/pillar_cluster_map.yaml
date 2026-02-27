@@ -1,0 +1,561 @@
+# SMARTSCALING™ Content Map — Complete Pillar-Cluster-Post Architecture
+# This file drives topic selection, internal linking, and content balance
+
+# ============================================================
+# PILLAR 1: STRATEGY
+# ============================================================
+strategy:
+  pillar_page:
+    title: "Sales Strategy for Technical & Service Businesses"
+    slug: "sales-strategy"
+    description: "How to build a sales strategy that actually works for companies where sales and delivery are tightly coupled."
+    target_keyword: "sales strategy for service businesses"
+    secondary_keywords: ["B2B sales strategy", "technical company sales strategy", "revenue growth strategy"]
+
+  clusters:
+    business_trajectory:
+      cluster_page:
+        title: "Business Trajectory: Revenue Growth Planning for $3M-$150M Companies"
+        slug: "business-trajectory"
+        target_keyword: "revenue growth planning"
+
+      posts:
+        - title: "The 5 Stages of Revenue Growth: Which One Is Your Company Stuck In?"
+          slug: "5-stages-revenue-growth"
+          keyword: "stages of revenue growth"
+          format: comparison
+          stage: all
+          priority: 1
+
+        - title: "The $10M Ceiling: Why Most Service Companies Stall (And the 3 Functions That Fix It)"
+          slug: "10m-ceiling-service-companies"
+          keyword: "service company revenue ceiling"
+          format: data_insight
+          stage: scaling
+          priority: 1
+
+        - title: "Exit Strategy: How to Build a Company Worth Buying"
+          slug: "exit-strategy-build-company-worth-buying"
+          keyword: "exit strategy small business"
+          format: how_to
+          stage: optimizing
+          priority: 2
+
+        - title: "Revenue Forecasting for Service Businesses (Not SaaS)"
+          slug: "revenue-forecasting-service-businesses"
+          keyword: "revenue forecasting service business"
+          format: how_to
+          stage: scaling
+          priority: 2
+
+        - title: "When to Stop Growing and Start Optimizing: The Revenue Inflection Point"
+          slug: "revenue-inflection-point"
+          keyword: "when to optimize vs grow revenue"
+          format: myth_buster
+          stage: optimizing
+          priority: 3
+
+        - title: "From $3M to $30M: The Scaling Playbook Nobody Gives You"
+          slug: "3m-to-30m-scaling-playbook"
+          keyword: "scaling business from 3m to 30m"
+          format: how_to
+          stage: emerging
+          priority: 2
+
+        - title: "FAQ: Revenue Growth Questions Founders Ask (25 Answers From 33K Companies)"
+          slug: "faq-revenue-growth-founders"
+          keyword: "revenue growth FAQ"
+          format: faq_deep_dive
+          stage: all
+          priority: 1
+
+        - title: "The Revenue Growth Benchmarks Your Board Should Actually Care About"
+          slug: "revenue-growth-benchmarks"
+          keyword: "revenue growth benchmarks B2B"
+          format: data_insight
+          stage: all
+          priority: 2
+
+    go_to_market:
+      cluster_page:
+        title: "Go-to-Market Strategy: Positioning, Pricing, and Market Selection"
+        slug: "go-to-market-strategy"
+        target_keyword: "go-to-market strategy B2B services"
+
+      posts:
+        - title: "Pricing Architecture for Technical Services: How to Charge What You're Worth"
+          slug: "pricing-architecture-technical-services"
+          keyword: "pricing strategy technical services"
+          format: how_to
+          stage: emerging
+          priority: 1
+
+        - title: "Market Selection: Why Most Companies Chase the Wrong Buyers"
+          slug: "market-selection-wrong-buyers"
+          keyword: "B2B market selection"
+          format: myth_buster
+          stage: startup
+          priority: 2
+
+        - title: "The 22% Price Increase Playbook: How to Charge More and Win More Deals"
+          slug: "22-percent-price-increase-playbook"
+          keyword: "how to raise prices B2B"
+          format: case_study
+          stage: scaling
+          priority: 1
+
+        - title: "Competitive Differentiation for Service Businesses (Hint: It's Not Your Technical Skills)"
+          slug: "competitive-differentiation-service-businesses"
+          keyword: "competitive differentiation B2B services"
+          format: myth_buster
+          stage: emerging
+          priority: 2
+
+        - title: "GTM Strategy vs Sales Strategy: Why Most Companies Confuse Them"
+          slug: "gtm-vs-sales-strategy"
+          keyword: "GTM strategy vs sales strategy"
+          format: comparison
+          stage: all
+          priority: 2
+
+        - title: "How to Position a Technical Service Business in a Crowded Market"
+          slug: "positioning-technical-service-business"
+          keyword: "positioning strategy B2B services"
+          format: how_to
+          stage: emerging
+          priority: 2
+
+# ============================================================
+# PILLAR 2: PEOPLE
+# ============================================================
+people:
+  pillar_page:
+    title: "Sales People: Hiring, Leading, and Structuring Your Sales Team"
+    slug: "sales-people"
+    description: "Data-backed approaches to building, assessing, and leading sales teams in technical and service businesses."
+    target_keyword: "building a sales team"
+    secondary_keywords: ["sales team structure", "sales hiring", "sales leadership"]
+
+  clusters:
+    talent_assessment:
+      cluster_page:
+        title: "Sales Talent Assessment: How to Know Who to Hire, Coach, and Move"
+        slug: "sales-talent-assessment"
+        target_keyword: "sales talent assessment"
+
+      posts:
+        - title: "The Real Cost of a Bad Sales Hire (We Analyzed 33,000 Companies)"
+          slug: "real-cost-bad-sales-hire"
+          keyword: "cost of bad sales hire"
+          format: data_insight
+          stage: all
+          priority: 1
+
+        - title: "Hiring Salespeople for Technical Service Businesses (They Need Different Skills)"
+          slug: "hiring-salespeople-technical-businesses"
+          keyword: "hiring salespeople technical companies"
+          format: how_to
+          stage: emerging
+          priority: 1
+
+        - title: "How to Evaluate Your Sales Team in 45 Minutes: The 11-Function Audit"
+          slug: "evaluate-sales-team-45-minutes"
+          keyword: "how to evaluate sales team"
+          format: how_to
+          stage: all
+          priority: 1
+
+        - title: "Why Your Technical People Don't Respect Your Sales Team (And How to Fix It)"
+          slug: "technical-people-dont-respect-sales"
+          keyword: "technical team vs sales team"
+          format: myth_buster
+          stage: scaling
+          priority: 1
+
+        - title: "What Percentage of Your Salespeople Are Actually Elite? (The Data Will Surprise You)"
+          slug: "percentage-elite-salespeople"
+          keyword: "elite salespeople percentage"
+          format: data_insight
+          stage: all
+          priority: 2
+
+        - title: "Sales Assessment Tools Compared: Which Ones Actually Predict Performance?"
+          slug: "sales-assessment-tools-compared"
+          keyword: "sales assessment tools comparison"
+          format: comparison
+          stage: all
+          priority: 2
+
+        - title: "FAQ: Sales Assessments — How to Know Who to Coach and Who to Move"
+          slug: "faq-sales-assessments"
+          keyword: "sales assessment FAQ"
+          format: faq_deep_dive
+          stage: all
+          priority: 2
+
+        - title: "When to Fire a Salesperson vs Coach Them: The Data-Backed Framework"
+          slug: "fire-vs-coach-salesperson"
+          keyword: "when to fire a salesperson"
+          format: how_to
+          stage: all
+          priority: 1
+
+    sales_leadership:
+      cluster_page:
+        title: "Sales Leadership: Building Leaders Who Drive Results"
+        slug: "sales-leadership"
+        target_keyword: "sales leadership development"
+
+      posts:
+        - title: "Why Your Sales Manager Is Your Biggest Revenue Bottleneck"
+          slug: "sales-manager-revenue-bottleneck"
+          keyword: "sales manager problems"
+          format: myth_buster
+          stage: scaling
+          priority: 1
+
+        - title: "Fractional Sales Leadership vs Full-Time VP Sales: The Math Nobody Shows You"
+          slug: "fractional-vs-full-time-vp-sales"
+          keyword: "fractional VP sales vs full time"
+          format: comparison
+          stage: emerging
+          priority: 1
+
+        - title: "From Technical Expert to Sales Leader: The Founder's Playbook"
+          slug: "technical-expert-to-sales-leader"
+          keyword: "founder sales leadership"
+          format: how_to
+          stage: startup
+          priority: 1
+
+        - title: "The Player-Coach Trap: Why Your Best Seller Makes a Terrible Manager"
+          slug: "player-coach-trap-sales"
+          keyword: "player coach trap sales manager"
+          format: myth_buster
+          stage: scaling
+          priority: 2
+
+        - title: "Sales Leadership Training — What Works, What Doesn't, and What the Data Says"
+          slug: "sales-leadership-training-data"
+          keyword: "sales leadership training effectiveness"
+          format: faq_deep_dive
+          stage: all
+          priority: 2
+
+        - title: "How to Build a Sales Coaching Culture (Not Just a Training Event)"
+          slug: "build-sales-coaching-culture"
+          keyword: "sales coaching culture"
+          format: how_to
+          stage: scaling
+          priority: 2
+
+    organizational_design:
+      cluster_page:
+        title: "Sales Organizational Design: Structuring Your Team for Scale"
+        slug: "sales-organizational-design"
+        target_keyword: "sales team structure"
+
+      posts:
+        - title: "From 2 Reps to 20 to 40: The Scaling Playbook (Ken's Story)"
+          slug: "scaling-2-to-20-to-40-reps"
+          keyword: "scaling sales team"
+          format: case_study
+          stage: all
+          priority: 1
+
+        - title: "Sales Team Structure for Technical/Professional Services"
+          slug: "sales-team-structure-professional-services"
+          keyword: "sales team structure service business"
+          format: how_to
+          stage: emerging
+          priority: 1
+
+        - title: "When to Add Your First Sales Manager: The Revenue Trigger"
+          slug: "when-to-add-first-sales-manager"
+          keyword: "when to hire sales manager"
+          format: how_to
+          stage: emerging
+          priority: 1
+
+        - title: "Hunter-Farmer vs Full-Cycle: Which Sales Model Fits Your Business?"
+          slug: "hunter-farmer-vs-full-cycle-sales"
+          keyword: "hunter farmer sales model"
+          format: comparison
+          stage: scaling
+          priority: 2
+
+# ============================================================
+# PILLAR 3: PROCESS
+# ============================================================
+process:
+  pillar_page:
+    title: "Sales Process: Building Repeatable Systems That Scale"
+    slug: "sales-process"
+    description: "How to replace hero-selling with predictable, repeatable sales systems — backed by data from 33,000 companies."
+    target_keyword: "sales process optimization"
+    secondary_keywords: ["repeatable sales process", "sales system", "sales process design"]
+
+  clusters:
+    process_architecture:
+      cluster_page:
+        title: "Sales Process Architecture: Designing Systems That Actually Work"
+        slug: "sales-process-architecture"
+        target_keyword: "sales process architecture"
+
+      posts:
+        - title: "Why 92% of Sales Processes Fail (The Data From 33,000 Companies)"
+          slug: "why-92-percent-sales-processes-fail"
+          keyword: "why sales processes fail"
+          format: data_insight
+          stage: all
+          priority: 1
+
+        - title: "Sales Process Architecture for Custom Service Businesses"
+          slug: "sales-process-custom-service-businesses"
+          keyword: "sales process service business"
+          format: how_to
+          stage: scaling
+          priority: 1
+
+        - title: "Sandler vs RAIN vs SMARTSCALING: Which Sales Methodology Works for Service Businesses?"
+          slug: "sandler-vs-rain-vs-smartscaling"
+          keyword: "sales methodology comparison"
+          format: comparison
+          stage: all
+          priority: 1
+
+        - title: "From Hero-Selling to Sales System: A Case Study in 500% Growth"
+          slug: "hero-selling-to-sales-system"
+          keyword: "hero selling to sales system"
+          format: case_study
+          stage: scaling
+          priority: 1
+
+        - title: "Sales Process Audit Checklist: The 12 Things That Actually Matter"
+          slug: "sales-process-audit-checklist"
+          keyword: "sales process audit"
+          format: how_to
+          stage: all
+          priority: 2
+
+        - title: "Why the Best Sales Teams Don't Have the Best Salespeople — They Have the Best Systems"
+          slug: "best-sales-teams-best-systems"
+          keyword: "sales systems vs sales talent"
+          format: myth_buster
+          stage: all
+          priority: 1
+
+    enablement:
+      cluster_page:
+        title: "Sales Enablement: Playbooks, Tools, and Battle Cards That Work"
+        slug: "sales-enablement"
+        target_keyword: "sales enablement strategy"
+
+      posts:
+        - title: "How to Build a Sales Playbook Your Team Will Actually Use"
+          slug: "build-sales-playbook"
+          keyword: "how to build sales playbook"
+          format: how_to
+          stage: scaling
+          priority: 1
+
+        - title: "Sales Enablement for Service Businesses: What's Different"
+          slug: "sales-enablement-service-businesses"
+          keyword: "sales enablement service business"
+          format: how_to
+          stage: scaling
+          priority: 2
+
+        - title: "Battle Cards That Win Deals: A Template From 33K Companies"
+          slug: "battle-cards-win-deals"
+          keyword: "sales battle card template"
+          format: how_to
+          stage: scaling
+          priority: 2
+
+    revenue_operations:
+      cluster_page:
+        title: "Revenue Operations: CRM, Forecasting, and Analytics for Growth"
+        slug: "revenue-operations"
+        target_keyword: "revenue operations consulting"
+
+      posts:
+        - title: "Why Your CRM Data Is Lying to You (And What to Track Instead)"
+          slug: "crm-data-lying-what-to-track"
+          keyword: "CRM data problems"
+          format: myth_buster
+          stage: scaling
+          priority: 1
+
+        - title: "Revenue Operations for Service Businesses (Not SaaS)"
+          slug: "revenue-operations-service-businesses"
+          keyword: "revenue operations service business"
+          format: how_to
+          stage: scaling
+          priority: 1
+
+        - title: "Sales Forecasting When Every Project Is Different"
+          slug: "sales-forecasting-custom-projects"
+          keyword: "sales forecasting service business"
+          format: how_to
+          stage: scaling
+          priority: 2
+
+# ============================================================
+# PILLAR 4: PERFORMANCE
+# ============================================================
+performance:
+  pillar_page:
+    title: "Sales Performance: Metrics, Compensation, and Continuous Improvement"
+    slug: "sales-performance"
+    description: "Data-driven approaches to measuring, incentivizing, and improving sales team performance."
+    target_keyword: "sales performance management"
+    secondary_keywords: ["sales metrics", "sales compensation", "sales KPIs"]
+
+  clusters:
+    metrics_analytics:
+      cluster_page:
+        title: "Sales Metrics & Analytics: What to Measure and Why"
+        slug: "sales-metrics-analytics"
+        target_keyword: "sales metrics that matter"
+
+      posts:
+        - title: "What 2.5 Million Sellers Taught Us About Closing Bigger Deals"
+          slug: "2-5-million-sellers-closing-bigger-deals"
+          keyword: "how to close bigger deals"
+          format: data_insight
+          stage: all
+          priority: 1
+
+        - title: "Sales Metrics for Service Businesses (Beyond Pipeline)"
+          slug: "sales-metrics-service-businesses"
+          keyword: "sales metrics service business"
+          format: how_to
+          stage: scaling
+          priority: 1
+
+        - title: "The State of Sales Teams 2026: Data From 33,000 Companies [Research Report]"
+          slug: "state-of-sales-teams-2026"
+          keyword: "sales team benchmarks 2026"
+          format: data_insight
+          stage: all
+          priority: 1
+
+        - title: "KPI Benchmarks by Company Size: What 'Good' Actually Looks Like"
+          slug: "sales-kpi-benchmarks-company-size"
+          keyword: "sales KPI benchmarks"
+          format: data_insight
+          stage: all
+          priority: 1
+
+    compensation:
+      cluster_page:
+        title: "Sales Compensation & Incentives: Plans That Drive Behavior"
+        slug: "sales-compensation"
+        target_keyword: "sales compensation plan"
+
+      posts:
+        - title: "Sales Compensation Plans That Actually Drive Behavior: A Data-Backed Guide"
+          slug: "sales-compensation-plans-drive-behavior"
+          keyword: "sales compensation plan examples"
+          format: how_to
+          stage: all
+          priority: 1
+
+        - title: "Commission vs Salary vs Hybrid: The Comp Structure Decision Framework"
+          slug: "commission-vs-salary-hybrid"
+          keyword: "sales commission vs salary"
+          format: comparison
+          stage: all
+          priority: 1
+
+        - title: "Sales Compensation for Service Businesses: Why SaaS Plans Don't Work Here"
+          slug: "sales-compensation-service-business"
+          keyword: "sales compensation service business"
+          format: myth_buster
+          stage: scaling
+          priority: 2
+
+    continuous_improvement:
+      cluster_page:
+        title: "Continuous Improvement: Building Sales Teams That Get Better Every Quarter"
+        slug: "continuous-improvement"
+        target_keyword: "sales team continuous improvement"
+
+      posts:
+        - title: "The Sales Coaching Cadence That Actually Moves Numbers"
+          slug: "sales-coaching-cadence"
+          keyword: "sales coaching cadence"
+          format: how_to
+          stage: scaling
+          priority: 2
+
+        - title: "Quarterly Sales Reviews That Drive Action (Not Just Reports)"
+          slug: "quarterly-sales-reviews"
+          keyword: "quarterly sales review template"
+          format: how_to
+          stage: optimizing
+          priority: 2
+
+        - title: "Why Sales Training Doesn't Stick (And the Accountability Loop That Does)"
+          slug: "why-sales-training-doesnt-stick"
+          keyword: "sales training retention"
+          format: myth_buster
+          stage: all
+          priority: 1
+
+# ============================================================
+# CROSS-PILLAR CONTENT
+# ============================================================
+cross_pillar:
+  posts:
+    - title: "The SMARTSCALING™ Framework: How 33,000 Companies Reveal the 11 Functions That Drive Revenue"
+      slug: "smartscaling-framework"
+      keyword: "SMARTSCALING framework"
+      format: how_to
+      pillar: all
+      priority: 1
+
+    - title: "Sales Coaching vs Sales Consulting vs Sales Systems: What Actually Moves Revenue"
+      slug: "sales-coaching-vs-consulting-vs-systems"
+      keyword: "sales coaching vs consulting"
+      format: comparison
+      pillar: all
+      priority: 1
+
+    - title: "Top Sales Consulting Firms Compared: What Each One Actually Does (2026 Guide)"
+      slug: "top-sales-consulting-firms-compared"
+      keyword: "best sales consulting firms"
+      format: comparison
+      pillar: all
+      priority: 1
+
+    - title: "When to Hire a Sales Consultant: The Decision Framework for Founders"
+      slug: "when-to-hire-sales-consultant"
+      keyword: "when to hire sales consultant"
+      format: how_to
+      pillar: all
+      priority: 1
+
+    - title: "Is Sales Consulting Worth It? ROI Data From 33,000 Companies"
+      slug: "is-sales-consulting-worth-it"
+      keyword: "is sales consulting worth it"
+      format: data_insight
+      pillar: all
+      priority: 1
+
+    - title: "FAQ: Everything Founders Ask Before Fixing Their Sales System (25 Questions Answered)"
+      slug: "faq-founders-fixing-sales-system"
+      keyword: "sales system FAQ"
+      format: faq_deep_dive
+      pillar: all
+      priority: 1
+
+# ============================================================
+# CONTENT TOTALS
+# ============================================================
+# Pillar pages: 4
+# Cluster pages: 11
+# Blog posts: 70+
+# Cross-pillar posts: 6
+# Total content pieces: 91+

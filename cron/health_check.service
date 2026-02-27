@@ -1,0 +1,17 @@
+[Unit]
+Description=RevHeat Blog Engine Health Check
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=revheat
+WorkingDirectory=/home/revheat/revheat-blog-engine
+Environment=PATH=/home/revheat/revheat-blog-engine/venv/bin:/usr/bin
+ExecStart=/home/revheat/revheat-blog-engine/venv/bin/python scripts/health_check.py
+StandardOutput=append:/home/revheat/revheat-blog-engine/logs/health_check.log
+StandardError=append:/home/revheat/revheat-blog-engine/logs/health_check_error.log
+TimeoutStartSec=120
+
+[Install]
+WantedBy=multi-user.target

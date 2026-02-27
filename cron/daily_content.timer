@@ -1,0 +1,11 @@
+[Unit]
+Description=Run RevHeat Content Engine Daily at 5 AM EST
+
+[Timer]
+OnCalendar=*-*-* 10:00:00
+RandomizedDelaySec=1800
+Persistent=true
+Unit=daily_content.service
+
+[Install]
+WantedBy=timers.target
