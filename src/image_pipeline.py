@@ -516,9 +516,10 @@ class ImagePipeline:
     def generate_featured_image(self, title: str, subtitle: str = "", pillar: str = "") -> ImageResult:
         """Generate a clean branded hero image for use as WordPress featured image.
 
-        This creates a simple, professional banner that looks good in the
-        WordPress header area — no data charts, no raw markdown, just the
-        title on a branded background with a subtle accent bar.
+        IMPORTANT: No text on the image!  The WordPress theme overlays the post
+        title on top of the featured image, so any text we draw here would
+        create ugly double-title overlap.  This generates a clean branded
+        background with subtle geometric accents only.
         """
         colors = self.brand["colors"]
         dims = self.brand["dimensions"]["featured_image"]
@@ -534,39 +535,47 @@ class ImagePipeline:
         accent_hex = pillar_colors.get(pillar.lower(), colors.get("primary", "#E63946"))
 
         navy = self._hex_to_rgb(colors.get("secondary", "#1D3557"))
-        white = (255, 255, 255)
         accent = self._hex_to_rgb(accent_hex)
+
+        # Slightly lighter navy for gradient effect
+        navy_light = tuple(min(c + 25, 255) for c in navy)
 
         img = Image.new("RGB", (w, h), navy)
         draw = ImageDraw.Draw(img)
 
-        # Accent bar at top
-        draw.rectangle([(0, 0), (w, 12)], fill=accent)
+        # Subtle gradient: darker at top, slightly lighter at bottom
+        for y in range(h):
+            ratio = y / h
+            row_color = tuple(int(navy[i] + (navy_light[i] - navy[i]) * ratio) for i in range(3))
+            draw.line([(0, y), (w, y)], fill=row_color)
 
-        # Accent bar at bottom
-        draw.rectangle([(0, h - 12), (w, h)], fill=accent)
+        # Accent bar at top (thin)
+        draw.rectangle([(0, 0), (w, 6)], fill=accent)
 
-        # Subtle diagonal accent stripe (background texture)
-        for offset in range(-h, w, 300):
+        # Accent bar at bottom (thin)
+        draw.rectangle([(0, h - 6), (w, h)], fill=accent)
+
+        # Subtle diagonal lines for texture (very faint)
+        faint_accent = tuple(int(navy[i] * 0.85 + accent[i] * 0.15) for i in range(3))
+        for offset in range(-h, w, 200):
             draw.line(
                 [(offset, h), (offset + h, 0)],
-                fill=(*accent, 30) if len(accent) == 3 else accent,
+                fill=faint_accent,
                 width=1,
             )
 
-        # Title text — large and centered
-        font_title = self._get_font(72, bold=True)
-        # Wrap long titles
-        self._draw_wrapped_text(draw, title, (120, h // 2 - 120), font_title, white, max_width=w - 240)
+        # Small accent geometric element — bottom-right corner triangle
+        triangle_size = 300
+        draw.polygon(
+            [(w, h - triangle_size), (w, h - 6), (w - triangle_size, h - 6)],
+            fill=faint_accent,
+        )
 
-        # Subtitle
-        if subtitle:
-            font_sub = self._get_font(36)
-            draw.text((120, h - 200), subtitle, fill=accent, font=font_sub)
-
-        # RevHeat branding — bottom right
-        font_brand = self._get_font(28, bold=True)
-        draw.text((w - 60, h - 60), "REVHEAT", fill=accent, font=font_brand, anchor="rb")
+        # Small accent geometric element — top-left corner triangle
+        draw.polygon(
+            [(0, 6), (0, 6 + triangle_size), (triangle_size, 6)],
+            fill=faint_accent,
+        )
 
         # Save
         slug = title[:40].lower().replace(" ", "-")
