@@ -1,5 +1,7 @@
 """State Tracker — persists published topic history to prevent duplicate content."""
 
+from __future__ import annotations
+
 import logging
 import os
 from datetime import datetime, timezone

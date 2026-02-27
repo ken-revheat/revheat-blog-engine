@@ -1,5 +1,7 @@
 """Draft Ingester — reads pre-written markdown drafts and prepares them for publishing."""
 
+from __future__ import annotations
+
 import logging
 import os
 import re
