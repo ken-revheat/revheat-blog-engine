@@ -878,6 +878,84 @@ What's your experience with this? Has your company tried a systematic approach o
 
         return str(soup)
 
+    # ------------------------------------------------------------------
+    # CTA normalisation & content cleanup
+    # ------------------------------------------------------------------
+
+    CTA_URL = "https://revheat.com/#Calendar"
+    CTA_TEXT = "Talk to the RevHeat Team"
+
+    # Patterns that identify CTA links to rewrite
+    _CTA_HREF_PATTERNS = [
+        "sales-alpha-roadmap", "#cta", "link-to-cta", "/roadmap",
+        "founder-call", "link)", "(link",
+    ]
+    _CTA_ANCHOR_PATTERNS = [
+        "sales alpha roadmap", "get the roadmap", "get your",
+        "book a consultation", "book a 20-minute", "schedule a",
+        "get started", "free diagnostic", "cta:",
+    ]
+
+    def normalize_ctas(self, content_html: str) -> str:
+        """Rewrite all call-to-action links and text to a single consistent CTA.
+
+        Replaces various CTA link texts and placeholder URLs with:
+          <a href="https://revheat.com/#Calendar">Talk to the RevHeat Team</a>
+        """
+        soup = BeautifulSoup(content_html, "html.parser")
+        rewritten = 0
+
+        # 1. Fix existing <a> tags that are CTA links
+        for a_tag in soup.find_all("a"):
+            href = (a_tag.get("href") or "").lower()
+            text = (a_tag.get_text() or "").lower()
+
+            is_cta = (
+                any(p in href for p in self._CTA_HREF_PATTERNS)
+                or any(p in text for p in self._CTA_ANCHOR_PATTERNS)
+            )
+            if is_cta:
+                a_tag["href"] = self.CTA_URL
+                a_tag.string = self.CTA_TEXT
+                rewritten += 1
+
+        # 2. Strip the "[CTA: ...]" raw text markers
+        html_str = str(soup)
+        html_str = re.sub(
+            r'\[CTA:[^\]]*\]',
+            f'<a href="{self.CTA_URL}">{self.CTA_TEXT}</a>',
+            html_str,
+        )
+
+        if rewritten:
+            log.info(f"Normalized {rewritten} CTA links to '{self.CTA_TEXT}'")
+        return html_str
+
+    def strip_reddit_section(self, content_html: str) -> str:
+        """Remove the Reddit Cross-Post section from published HTML.
+
+        This section is for internal use (email notification / Reddit bot)
+        and should not appear on the WordPress post.
+        """
+        soup = BeautifulSoup(content_html, "html.parser")
+
+        # Find any heading containing "Reddit" (h2, h3, etc.)
+        for heading in soup.find_all(re.compile(r'^h[2-4]$')):
+            heading_text = heading.get_text().lower()
+            if "reddit" in heading_text and ("cross-post" in heading_text or "cross post" in heading_text):
+                # Remove everything from this heading to the next same-level heading or end
+                elements_to_remove = [heading]
+                for sibling in heading.find_next_siblings():
+                    if sibling.name and sibling.name == heading.name:
+                        break  # Stop at the next same-level heading
+                    elements_to_remove.append(sibling)
+                for el in elements_to_remove:
+                    el.decompose()
+                log.info("Stripped Reddit cross-post section from published HTML")
+                break
+
+        return str(soup)
+
     def inject_planned_links(self, content_html: str, planned_links: list[dict]) -> str:
         """Inject pre-planned internal links from frontmatter into HTML.
 
@@ -1026,8 +1104,14 @@ Estimated review time: 25-30 minutes
             "howto_steps": draft.howto_steps if draft.howto_steps else None,
         })
 
-        # 6. Inject Schema into HTML
-        content_with_schema = self.schema_builder.inject_into_html(draft.content_html, schema)
+        # 6a. Normalize CTAs to "Talk to the RevHeat Team" → /#Calendar
+        content_clean = self.normalize_ctas(draft.content_html)
+
+        # 6b. Strip Reddit cross-post section (internal use only)
+        content_clean = self.strip_reddit_section(content_clean)
+
+        # 6c. Inject Schema into HTML
+        content_with_schema = self.schema_builder.inject_into_html(content_clean, schema)
 
         # 7a. Inject planned internal links from frontmatter (priority)
         content_with_planned = self.inject_planned_links(

@@ -345,8 +345,9 @@ EVERY post MUST include these elements in this order:
 
 ### 14. Author Bio + CTA
 - SMARTSCALING credentials
-- Sales Alpha Roadmap CTA with link placeholder
-- Format: `[Get Your Sales Alpha Roadmap™ →](https://revheat.com/sales-alpha-roadmap/)`
+- CTA text must be: "Talk to the RevHeat Team"
+- CTA link must be: https://revheat.com/#Calendar
+- Format: `[Talk to the RevHeat Team →](https://revheat.com/#Calendar)`
 
 ### 15. Reddit Cross-Post Section
 - Target subreddit (from frontmatter)
