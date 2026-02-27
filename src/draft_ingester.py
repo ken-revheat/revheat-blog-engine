@@ -27,6 +27,20 @@ class DraftIngester:
         "Week-02": 3,
         "Week-03": 4,
         "Week-04": 5,
+        "Week-05": 6,
+        "Week-06": 7,
+        "Week-07": 8,
+        "Week-08": 9,
+    }
+
+    # Map bare pillar names to WP category slugs.  Frontmatter category
+    # values (e.g. "Sales Process Architecture") pass through directly —
+    # wp_publisher.get_category_id() slugifies them to match WP slugs.
+    PILLAR_TO_CATEGORY = {
+        "people": "sales-people",
+        "performance": "sales-performance",
+        "process": "sales-process",
+        "strategy": "sales-strategy",
     }
 
     def __init__(self, content_map: dict = None):
@@ -233,9 +247,12 @@ class DraftIngester:
             if isinstance(tags, list):
                 draft.tags = [t.replace(" ", "-") if isinstance(t, str) else t for t in tags]
         if metadata.get("category"):
-            draft.categories = [metadata["category"].lower()]
+            # Pass through as-is — wp_publisher slugifies to match WP slugs
+            draft.categories = [metadata["category"]]
         elif topic.smartscaling_pillar:
-            draft.categories = [topic.smartscaling_pillar]
+            # Bare pillar names need mapping (e.g. "people" → "sales-people")
+            pillar = topic.smartscaling_pillar.lower()
+            draft.categories = [self.PILLAR_TO_CATEGORY.get(pillar, pillar)]
 
         # Pass planned internal links from frontmatter
         raw_links = metadata.get("internal_links", {})

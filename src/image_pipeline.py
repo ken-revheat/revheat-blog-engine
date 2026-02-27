@@ -125,6 +125,10 @@ class ImagePipeline:
             font_dirs.extend([
                 "/usr/share/fonts/truetype/dejavu",
                 "/usr/share/fonts/truetype/liberation",
+                "/usr/share/fonts/liberation-sans",      # Amazon Linux 2023
+                "/usr/share/fonts/liberation-mono",
+                "/usr/share/fonts/google-noto-sans",
+                "/usr/share/fonts/dejavu-sans-fonts",
                 "/usr/share/fonts/TTF",
                 "/usr/share/fonts",
             ])
@@ -509,6 +513,76 @@ class ImagePipeline:
             format="png",
         )
 
+    def generate_featured_image(self, title: str, subtitle: str = "", pillar: str = "") -> ImageResult:
+        """Generate a clean branded hero image for use as WordPress featured image.
+
+        This creates a simple, professional banner that looks good in the
+        WordPress header area — no data charts, no raw markdown, just the
+        title on a branded background with a subtle accent bar.
+        """
+        colors = self.brand["colors"]
+        dims = self.brand["dimensions"]["featured_image"]
+        w, h = dims["width"] * 2, dims["height"] * 2  # 2400 × 1254
+
+        # Pillar-specific accent colors
+        pillar_colors = {
+            "people": "#E63946",      # Red
+            "performance": "#2A9D8F", # Teal
+            "process": "#457B9D",     # Steel blue
+            "strategy": "#E9C46A",    # Gold
+        }
+        accent_hex = pillar_colors.get(pillar.lower(), colors.get("primary", "#E63946"))
+
+        navy = self._hex_to_rgb(colors.get("secondary", "#1D3557"))
+        white = (255, 255, 255)
+        accent = self._hex_to_rgb(accent_hex)
+
+        img = Image.new("RGB", (w, h), navy)
+        draw = ImageDraw.Draw(img)
+
+        # Accent bar at top
+        draw.rectangle([(0, 0), (w, 12)], fill=accent)
+
+        # Accent bar at bottom
+        draw.rectangle([(0, h - 12), (w, h)], fill=accent)
+
+        # Subtle diagonal accent stripe (background texture)
+        for offset in range(-h, w, 300):
+            draw.line(
+                [(offset, h), (offset + h, 0)],
+                fill=(*accent, 30) if len(accent) == 3 else accent,
+                width=1,
+            )
+
+        # Title text — large and centered
+        font_title = self._get_font(72, bold=True)
+        # Wrap long titles
+        self._draw_wrapped_text(draw, title, (120, h // 2 - 120), font_title, white, max_width=w - 240)
+
+        # Subtitle
+        if subtitle:
+            font_sub = self._get_font(36)
+            draw.text((120, h - 200), subtitle, fill=accent, font=font_sub)
+
+        # RevHeat branding — bottom right
+        font_brand = self._get_font(28, bold=True)
+        draw.text((w - 60, h - 60), "REVHEAT", fill=accent, font=font_brand, anchor="rb")
+
+        # Save
+        slug = title[:40].lower().replace(" ", "-")
+        filename = "featured-" + "".join(c for c in slug if c.isalnum() or c in "-.") + ".png"
+        filepath = os.path.join(self.output_dir, filename)
+        img.save(filepath, "PNG")
+
+        return ImageResult(
+            path=filepath,
+            alt_text=title,
+            caption=f"{title} — RevHeat",
+            width=img.width,
+            height=img.height,
+            format="png",
+        )
+
     def apply_brand_template(self, image_path: str, template_type: str = "chart") -> str:
         """Apply brand watermark and border to an image."""
         colors = self.brand["colors"]
@@ -718,21 +792,34 @@ class ImagePipeline:
         return {"Approach": "Ad-hoc", "Results": "Inconsistent"}, {"Approach": "Systematic", "Results": "Predictable"}
 
     def full_pipeline(self, draft) -> list[ImageResult]:
-        """Run the full image pipeline for a blog draft."""
+        """Run the full image pipeline for a blog draft.
+
+        IMPORTANT: results[0] becomes the WordPress featured image (hero banner).
+        It must be a clean branded image, NOT a data chart.  Data charts and
+        comparison graphics are in-content images only.
+        """
         results = []
 
-        # 1. Always generate a featured image — extract real data from draft
-        chart_data = self.extract_chart_data_from_draft(draft)
+        # 1. Always generate a clean featured / hero image (results[0])
+        pillar = getattr(draft, "smartscaling_pillar", "") or ""
+        featured = self.generate_featured_image(
+            title=getattr(draft, "title", "RevHeat"),
+            subtitle=getattr(draft, "meta_description", "")[:100] if hasattr(draft, "meta_description") else "",
+            pillar=pillar,
+        )
+        results.append(featured)
 
-        featured = self.generate_data_chart(
+        # 2. Data chart — goes into the post body, not as featured image
+        chart_data = self.extract_chart_data_from_draft(draft)
+        chart = self.generate_data_chart(
             data=chart_data,
             chart_type="comparison_bar",
             title=getattr(draft, "title", "RevHeat Data Insight"),
             subtitle="Data from 33,000 companies — RevHeat Research",
         )
-        results.append(featured)
+        results.append(chart)
 
-        # 2. If comparison table exists, generate comparison graphic with real data
+        # 3. If comparison table exists, generate comparison graphic with real data
         if hasattr(draft, "comparison_table") and draft.comparison_table:
             before_data, after_data = self.extract_comparison_data_from_draft(draft)
             comparison = self.generate_comparison_graphic(
@@ -742,7 +829,7 @@ class ImagePipeline:
             )
             results.append(comparison)
 
-        # 3. If quotable line, generate quote card
+        # 4. If quotable line, generate quote card
         if hasattr(draft, "key_takeaway") and draft.key_takeaway:
             quote_text = draft.key_takeaway[:140]
             quote = self.generate_quote_card(quote_text)

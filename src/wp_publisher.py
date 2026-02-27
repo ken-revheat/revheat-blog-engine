@@ -6,6 +6,7 @@ import base64
 import logging
 import mimetypes
 import os
+import re
 import time
 from pathlib import Path
 
@@ -251,6 +252,11 @@ class WordPressPublisher:
 
     def get_category_id(self, slug) -> int:
         """Look up category ID by slug, using cache."""
+        # Normalize to proper slug format: lowercase, hyphens, no special chars
+        slug = slug.lower().strip().replace(" ", "-").replace("&", "and")
+        slug = re.sub(r"[^a-z0-9-]", "", slug)
+        slug = re.sub(r"-+", "-", slug).strip("-")
+
         if slug in self._category_cache:
             return self._category_cache[slug]
 
