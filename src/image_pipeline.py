@@ -513,71 +513,139 @@ class ImagePipeline:
             format="png",
         )
 
+    # Pexels search keywords by pillar — used for finding relevant stock photos
+    PILLAR_PHOTO_KEYWORDS = {
+        "people": "sales team business meeting professional",
+        "performance": "business analytics dashboard metrics office",
+        "process": "business workflow strategy planning whiteboard",
+        "strategy": "business leader executive presentation corporate",
+    }
+    DEFAULT_PHOTO_KEYWORDS = "business professional sales corporate office"
+
     def generate_featured_image(self, title: str, subtitle: str = "", pillar: str = "") -> ImageResult:
-        """Generate a clean branded hero image for use as WordPress featured image.
+        """Fetch a relevant stock photo from Pexels to use as WordPress featured image.
 
-        IMPORTANT: No text on the image!  The WordPress theme overlays the post
-        title on top of the featured image, so any text we draw here would
-        create ugly double-title overlap.  This generates a clean branded
-        background with subtle geometric accents only.
+        The WP theme overlays the post title on the photo, so NO text is added.
+        Falls back to a branded gradient background if Pexels is unavailable.
         """
-        colors = self.brand["colors"]
-        dims = self.brand["dimensions"]["featured_image"]
-        w, h = dims["width"] * 2, dims["height"] * 2  # 2400 × 1254
+        pexels_key = os.getenv("PEXELS_API_KEY", "")
 
-        # Pillar-specific accent colors
-        pillar_colors = {
-            "people": "#E63946",      # Red
-            "performance": "#2A9D8F", # Teal
-            "process": "#457B9D",     # Steel blue
-            "strategy": "#E9C46A",    # Gold
-        }
-        accent_hex = pillar_colors.get(pillar.lower(), colors.get("primary", "#E63946"))
+        if pexels_key:
+            result = self._fetch_pexels_photo(title, pillar, pexels_key)
+            if result:
+                return result
+            log.warning("Pexels fetch failed — falling back to generated background")
 
-        navy = self._hex_to_rgb(colors.get("secondary", "#1D3557"))
-        accent = self._hex_to_rgb(accent_hex)
+        # Fallback: simple dark gradient (no accent bars)
+        return self._generate_fallback_background(title, pillar)
 
-        # Slightly lighter navy for gradient effect
-        navy_light = tuple(min(c + 25, 255) for c in navy)
+    def _fetch_pexels_photo(self, title: str, pillar: str, api_key: str) -> ImageResult:
+        """Search Pexels for a relevant business photo and download it."""
+        # Build search query from pillar keywords + first few title words
+        keywords = self.PILLAR_PHOTO_KEYWORDS.get(
+            pillar.lower(), self.DEFAULT_PHOTO_KEYWORDS
+        )
+        # Add a couple of title words for relevance
+        title_words = [w for w in title.split()[:3] if len(w) > 3]
+        query = keywords + " " + " ".join(title_words)
 
-        img = Image.new("RGB", (w, h), navy)
-        draw = ImageDraw.Draw(img)
+        try:
+            resp = requests.get(
+                "https://api.pexels.com/v1/search",
+                headers={"Authorization": api_key},
+                params={
+                    "query": query,
+                    "per_page": 5,
+                    "orientation": "landscape",
+                    "size": "large",
+                },
+                timeout=15,
+            )
+            resp.raise_for_status()
+            data = resp.json()
 
-        # Subtle gradient: darker at top, slightly lighter at bottom
-        for y in range(h):
-            ratio = y / h
-            row_color = tuple(int(navy[i] + (navy_light[i] - navy[i]) * ratio) for i in range(3))
-            draw.line([(0, y), (w, y)], fill=row_color)
+            photos = data.get("photos", [])
+            if not photos:
+                # Broaden search to just pillar keywords
+                resp2 = requests.get(
+                    "https://api.pexels.com/v1/search",
+                    headers={"Authorization": api_key},
+                    params={
+                        "query": keywords,
+                        "per_page": 5,
+                        "orientation": "landscape",
+                        "size": "large",
+                    },
+                    timeout=15,
+                )
+                resp2.raise_for_status()
+                photos = resp2.json().get("photos", [])
 
-        # Accent bar at top (thin)
-        draw.rectangle([(0, 0), (w, 6)], fill=accent)
+            if not photos:
+                log.warning("No Pexels photos found for: " + query)
+                return None
 
-        # Accent bar at bottom (thin)
-        draw.rectangle([(0, h - 6), (w, h)], fill=accent)
+            # Pick a random photo from results to avoid repetition
+            import random
+            photo = random.choice(photos)
 
-        # Subtle diagonal lines for texture (very faint)
-        faint_accent = tuple(int(navy[i] * 0.85 + accent[i] * 0.15) for i in range(3))
-        for offset in range(-h, w, 200):
-            draw.line(
-                [(offset, h), (offset + h, 0)],
-                fill=faint_accent,
-                width=1,
+            # Download the large landscape version (~1880px wide)
+            image_url = photo.get("src", {}).get("large2x") or photo.get("src", {}).get("large")
+            if not image_url:
+                return None
+
+            img_resp = requests.get(image_url, timeout=30)
+            img_resp.raise_for_status()
+
+            # Save to disk
+            slug = title[:40].lower().replace(" ", "-")
+            filename = "featured-" + "".join(c for c in slug if c.isalnum() or c in "-.") + ".jpg"
+            filepath = os.path.join(self.output_dir, filename)
+
+            with open(filepath, "wb") as f:
+                f.write(img_resp.content)
+
+            # Get dimensions
+            img = Image.open(filepath)
+            w, h = img.size
+            img.close()
+
+            photographer = photo.get("photographer", "Pexels")
+            alt = photo.get("alt", title)
+
+            log.info(
+                "Downloaded Pexels photo by %s for '%s' (%dx%d)",
+                photographer, title[:50], w, h,
             )
 
-        # Small accent geometric element — bottom-right corner triangle
-        triangle_size = 300
-        draw.polygon(
-            [(w, h - triangle_size), (w, h - 6), (w - triangle_size, h - 6)],
-            fill=faint_accent,
-        )
+            return ImageResult(
+                path=filepath,
+                alt_text=alt if alt else title,
+                caption=f"Photo by {photographer} via Pexels",
+                width=w,
+                height=h,
+                format="jpg",
+            )
 
-        # Small accent geometric element — top-left corner triangle
-        draw.polygon(
-            [(0, 6), (0, 6 + triangle_size), (triangle_size, 6)],
-            fill=faint_accent,
-        )
+        except Exception as e:
+            log.error("Pexels API error: %s", e)
+            return None
 
-        # Save
+    def _generate_fallback_background(self, title: str, pillar: str) -> ImageResult:
+        """Generate a simple dark background when stock photos aren't available."""
+        dims = self.brand["dimensions"]["featured_image"]
+        w, h = dims["width"] * 2, dims["height"] * 2
+
+        # Simple dark gradient — no accent bars, no geometric shapes
+        img = Image.new("RGB", (w, h), (20, 30, 50))
+        draw = ImageDraw.Draw(img)
+        for y in range(h):
+            ratio = y / h
+            r = int(20 + 15 * ratio)
+            g = int(30 + 15 * ratio)
+            b = int(50 + 15 * ratio)
+            draw.line([(0, y), (w, y)], fill=(r, g, b))
+
         slug = title[:40].lower().replace(" ", "-")
         filename = "featured-" + "".join(c for c in slug if c.isalnum() or c in "-.") + ".png"
         filepath = os.path.join(self.output_dir, filename)
@@ -587,8 +655,8 @@ class ImagePipeline:
             path=filepath,
             alt_text=title,
             caption=f"{title} — RevHeat",
-            width=img.width,
-            height=img.height,
+            width=w,
+            height=h,
             format="png",
         )
 
