@@ -45,6 +45,10 @@ class SchemaBuilder:
         defaults = {
             "primary_topic": post_data.get("smartscaling_pillar", "Sales Optimization"),
             "topic_description": "",
+            "article_section": "",
+            "time_required": "",
+            "speakable_text": [],
+            "speakable_selectors": [],
         }
         merged = {**defaults, **post_data}
 
@@ -252,9 +256,16 @@ class SchemaBuilder:
         return html_content + "\n" + script_tag
 
     def deploy_site_schemas(self) -> str:
-        """Generate PHP snippet for site-wide Organization/Person/WebSite schemas."""
+        """Generate PHP snippet for site-wide Organization/Person/WebSite schemas.
+
+        NOTE: Rank Math already outputs basic Organization + WebSite + Person schemas.
+        This enhanced version enriches them with sameAs, contactPoint, and detailed
+        Person data that Rank Math doesn't include. Install via Rank Math > General
+        Settings > Edit Robot.txt or via theme functions.php.
+        """
         return """<?php
-// Add to functions.php or Rank Math custom code
+// Add to functions.php or Rank Math > General Settings > Code (Head) section
+// This enriches the Organization + Person schemas beyond what Rank Math auto-generates.
 add_action('wp_head', function() {
     $schema = [
         '@context' => 'https://schema.org',
@@ -264,13 +275,30 @@ add_action('wp_head', function() {
                 '@id' => 'https://revheat.com/#organization',
                 'name' => 'RevHeat',
                 'url' => 'https://revheat.com',
+                'description' => 'Sales consulting firm helping mid-market companies ($3M-$150M) build predictable sales systems using data from 33,000+ companies and the proprietary SMARTSCALING Framework.',
                 'logo' => [
                     '@type' => 'ImageObject',
-                    'url' => 'https://revheat.com/wp-content/uploads/revheat-logo.png'
+                    '@id' => 'https://revheat.com/#logo',
+                    'url' => 'https://revheat.com/wp-content/uploads/2025/09/image-removebg-preview-2.png',
+                    'contentUrl' => 'https://revheat.com/wp-content/uploads/2025/09/image-removebg-preview-2.png',
+                    'caption' => 'RevHeat',
+                    'width' => '250',
+                    'height' => '250'
                 ],
                 'sameAs' => [
-                    'https://www.linkedin.com/company/revheat',
-                    'https://twitter.com/revheat'
+                    'https://www.linkedin.com/company/revheat'
+                ],
+                'contactPoint' => [
+                    '@type' => 'ContactPoint',
+                    'contactType' => 'sales',
+                    'url' => 'https://revheat.com/#Calendar'
+                ],
+                'knowsAbout' => [
+                    'Sales Process Architecture',
+                    'Sales Performance Management',
+                    'Sales Talent Assessment',
+                    'Sales Strategy',
+                    'SMARTSCALING Framework'
                 ]
             ],
             [
@@ -279,17 +307,21 @@ add_action('wp_head', function() {
                 'name' => 'Ken Lundin',
                 'jobTitle' => 'Founder & CEO',
                 'worksFor' => ['@id' => 'https://revheat.com/#organization'],
-                'url' => 'https://revheat.com/about/'
-            ],
-            [
-                '@type' => 'WebSite',
-                '@id' => 'https://revheat.com/#website',
-                'name' => 'RevHeat',
-                'url' => 'https://revheat.com',
-                'publisher' => ['@id' => 'https://revheat.com/#organization']
+                'url' => 'https://revheat.com/about/',
+                'description' => 'Founder of RevHeat and creator of the SMARTSCALING Framework. Sales systems expert with data from 33,000+ companies.',
+                'knowsAbout' => [
+                    'Sales Leadership',
+                    'Revenue Operations',
+                    'SMARTSCALING',
+                    'Sales Process Optimization',
+                    'Sales Talent Assessment'
+                ],
+                'sameAs' => [
+                    'https://www.linkedin.com/in/kenlundin/'
+                ]
             ]
         ]
     ];
-    echo '<script type="application/ld+json">' . wp_json_encode($schema) . '</script>';
+    echo '<script type=\"application/ld+json\">' . wp_json_encode($schema) . '</script>';
 });
 ?>"""

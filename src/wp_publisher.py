@@ -155,6 +155,7 @@ class WordPressPublisher:
             "title": title,
             "content": content_html,
             "status": "draft",
+            "author": 21,  # Ken Lundin — ensures correct author schema
         }
         if slug:
             payload["slug"] = slug

@@ -118,13 +118,24 @@ class ContentEngine:
         from src.draft_ingester import DraftIngester
         self.draft_ingester = DraftIngester(content_map=self.content_map)
 
-        # Resolve drafts directory (relative to project root or absolute)
-        drafts_dir_cfg = self.config.get("content", {}).get("drafts_dir", "")
-        if drafts_dir_cfg:
-            if os.path.isabs(drafts_dir_cfg):
-                self.drafts_dir = drafts_dir_cfg
+        # Resolve drafts directory — check Dropbox path first (EC2), then local path
+        content_cfg = self.config.get("content", {})
+        dropbox_dir = content_cfg.get("drafts_dir_dropbox", "")
+        local_dir = content_cfg.get("drafts_dir", "")
+
+        # Expand ~ in Dropbox path
+        if dropbox_dir:
+            dropbox_dir = os.path.expanduser(dropbox_dir)
+
+        if dropbox_dir and os.path.isdir(dropbox_dir):
+            self.drafts_dir = dropbox_dir
+            log.info(f"Using Dropbox drafts directory: {self.drafts_dir}")
+        elif local_dir:
+            if os.path.isabs(local_dir):
+                self.drafts_dir = local_dir
             else:
-                self.drafts_dir = os.path.normpath(os.path.join(self.project_root, drafts_dir_cfg))
+                self.drafts_dir = os.path.normpath(os.path.join(self.project_root, local_dir))
+            log.info(f"Using local drafts directory: {self.drafts_dir}")
         else:
             self.drafts_dir = ""
 
@@ -1090,8 +1101,31 @@ Estimated review time: 25-30 minutes
         log.info(f"Generated {len(images)} images")
 
         # 5. Build Schema
+        # Calculate reading time (avg 238 words/min)
+        reading_minutes = max(1, round(draft.word_count / 238)) if draft.word_count else 5
+        reading_time_iso = f"PT{reading_minutes}M"
+
+        # Build speakable passages: TL;DR + meta description (key quotable content)
+        speakable_selectors = ["#tldr", ".article-summary"]
+        speakable_text = []
+        if hasattr(draft, "tldr") and draft.tldr:
+            speakable_text.append(draft.tldr)
+        if draft.meta_description:
+            speakable_text.append(draft.meta_description)
+
+        # Map pillar to article section
+        pillar_sections = {
+            "people": "Sales People",
+            "performance": "Sales Performance",
+            "process": "Sales Process",
+            "strategy": "Sales Strategy",
+        }
+        article_section = pillar_sections.get(
+            (draft.smartscaling_pillar or "").lower(), "Sales Optimization"
+        )
+
         schema = self.schema_builder.build_full_graph({
-            "post_url": f"https://revheat.com/blog/{draft.slug}/",
+            "post_url": f"https://revheat.com/{draft.slug}/",
             "post_title": draft.title,
             "meta_description": draft.meta_description,
             "publish_date_iso": today.isoformat(),
@@ -1102,6 +1136,10 @@ Estimated review time: 25-30 minutes
             "keywords": ", ".join([topic.primary_keyword] + topic.secondary_keywords),
             "faq_items": draft.faq_items,
             "howto_steps": draft.howto_steps if draft.howto_steps else None,
+            "article_section": article_section,
+            "time_required": reading_time_iso,
+            "speakable_text": speakable_text,
+            "speakable_selectors": speakable_selectors,
         })
 
         # 6a. Normalize CTAs to "Talk to the RevHeat Team" → /#Calendar

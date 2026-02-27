@@ -6,7 +6,12 @@
     "@type": "Person",
     "@id": "https://revheat.com/#person",
     "name": "Ken Lundin",
-    "url": "https://revheat.com/about/"
+    "jobTitle": "Founder & CEO",
+    "url": "https://revheat.com/about/",
+    "worksFor": {
+      "@type": "Organization",
+      "@id": "https://revheat.com/#organization"
+    }
   },
   "headline": {{ post_title | tojson }},
   "description": {{ meta_description | tojson }},
@@ -14,6 +19,8 @@
   "dateModified": "{{ modified_date_iso }}",
   "mainEntityOfPage": { "@id": "{{ post_url }}" },
   "wordCount": {{ word_count }},
+  "articleSection": {{ (article_section or "Sales Optimization") | tojson }},
+  "timeRequired": "{{ time_required or 'PT5M' }}",
   "publisher": {
     "@type": "Organization",
     "@id": "https://revheat.com/#organization",
@@ -21,7 +28,7 @@
     "url": "https://revheat.com",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://revheat.com/wp-content/uploads/revheat-logo.png"
+      "url": "https://revheat.com/wp-content/uploads/2025/09/image-removebg-preview-2.png"
     }
   },
   "image": {
@@ -33,6 +40,10 @@
     "@type": "Thing",
     "name": {{ primary_topic | tojson }},
     "description": {{ topic_description | tojson }}
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": {{ (speakable_selectors or ["#tldr", ".article-summary"]) | tojson }}
   },
   "inLanguage": "en-US"
 }

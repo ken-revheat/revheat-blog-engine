@@ -3,13 +3,18 @@
 site:
   name: "RevHeat"
   url: "https://revheat.com"
-  blog_base: "https://revheat.com/blog/"
+  blog_base: "https://revheat.com/"   # WP uses root-level permalinks (no /blog/ prefix)
   author: "Ken Lundin"
+  author_id: 21                        # WP user ID for Ken Lundin
   author_title: "Founder & CEO, RevHeat"
   organization: "RevHeat"
 
 content:
+  # Dropbox syncs drafts from Mac → EC2 automatically.
+  # On Mac:  ../04-Blog-Drafts  (relative to project root)
+  # On EC2:  ~/Dropbox/04-Blog-Drafts  (Dropbox sync)
   drafts_dir: "../04-Blog-Drafts"    # Cowork-authored drafts, consumed before API generation
+  drafts_dir_dropbox: "~/Dropbox/04-Blog-Drafts"  # EC2 Dropbox path (used if exists)
   prefer_existing_drafts: true        # Check backlog before API generation
   min_word_count: 1200
   max_word_count: 2000
