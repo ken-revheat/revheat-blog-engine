@@ -31,8 +31,8 @@ content:
     wednesday: "myth_buster"
     thursday: "comparison"
     friday: "case_study"
-    saturday: null  # No publish
-    sunday: null    # No publish
+    saturday: "data_insight"   # Publish 7 days/week
+    sunday: "how_to"           # Publish 7 days/week
 
 claude:
   model: "claude-sonnet-4-5-20250929"
