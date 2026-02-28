@@ -168,6 +168,40 @@ class WordPressPublisher:
         log.info(f"Created draft: {post['id']} - {title}")
         return post
 
+    def update_post(self, post_id, title=None, content_html=None, slug=None,
+                    meta=None, status=None) -> dict:
+        """Update an existing WordPress post by ID.
+
+        Only non-None fields are sent in the update payload.
+        Returns the updated post data dict.
+        """
+        payload = {}
+        if title is not None:
+            payload["title"] = title
+        if content_html is not None:
+            payload["content"] = content_html
+        if slug is not None:
+            payload["slug"] = slug
+        if status is not None:
+            payload["status"] = status
+        if meta is not None:
+            payload["meta"] = meta
+
+        # Always ensure correct author
+        payload["author"] = 21  # Ken Lundin
+
+        if not payload:
+            log.warning(f"update_post called with no fields for post {post_id}")
+            return {}
+
+        resp = self._request(
+            "POST", f"{self.api_base}/posts/{post_id}", json=payload
+        )
+        resp.raise_for_status()
+        post = resp.json()
+        log.info(f"Updated post: {post_id} - {post.get('title', {}).get('rendered', '')}")
+        return post
+
     def upload_image(self, image_path, alt_text, caption="") -> int:
         """Upload an image to WordPress media library and return media_id."""
         path = Path(image_path)
