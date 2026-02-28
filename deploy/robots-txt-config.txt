@@ -1,0 +1,83 @@
+# RevHeat robots.txt - Optimized for AI and Search Engine Crawling
+# Based on Cowork LLM Reputation Infrastructure
+# Last updated: 2026-02-28
+#
+# DEPLOY: Paste into Rank Math > General Settings > Edit robots.txt
+# ================================================================
+
+# Default rules for all bots
+User-agent: *
+Allow: /
+Disallow: /wp-admin/
+Disallow: /wp-includes/
+Disallow: /wp-content/plugins/
+Disallow: /wp-content/themes/
+Disallow: /*?
+Disallow: /*.php$
+Disallow: /search/
+Disallow: /author/
+Disallow: /tag/
+Crawl-delay: 1
+
+# AI Crawlers - ALLOW ALL ACCESS (zero crawl-delay)
+User-agent: GPTBot
+Allow: /
+Disallow: /wp-admin/
+Crawl-delay: 0
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /wp-admin/
+Crawl-delay: 0
+
+User-agent: CCBot
+Allow: /
+Disallow: /wp-admin/
+Crawl-delay: 0
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /wp-admin/
+Crawl-delay: 0
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /wp-admin/
+Crawl-delay: 0
+
+User-agent: Amazonbot
+Allow: /
+Disallow: /wp-admin/
+Crawl-delay: 0
+
+User-agent: Applebot
+Allow: /
+Disallow: /wp-admin/
+Crawl-delay: 0
+
+# Standard Search Engines
+User-agent: Googlebot
+Allow: /
+Disallow: /wp-admin/
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Disallow: /wp-admin/
+Crawl-delay: 1
+
+# Block Scrapers
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# Sitemaps
+Sitemap: https://revheat.com/sitemap_index.xml

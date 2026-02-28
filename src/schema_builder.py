@@ -256,69 +256,186 @@ class SchemaBuilder:
         return html_content + "\n" + script_tag
 
     def deploy_site_schemas(self) -> str:
-        """Generate PHP snippet for site-wide Organization/Person/WebSite schemas.
+        """Generate PHP snippet for site-wide Organization/Person/WebSite/Service schemas.
 
-        NOTE: Rank Math already outputs basic Organization + WebSite + Person schemas.
-        This enhanced version enriches them with sameAs, contactPoint, and detailed
-        Person data that Rank Math doesn't include. Install via Rank Math > General
-        Settings > Edit Robot.txt or via theme functions.php.
+        Based on Cowork's LLM Reputation Infrastructure schema templates.
+        Enriches Rank Math's basic output with detailed entity data:
+        - Organization with services catalog, knowsAbout, address, founding date
+        - Person (Ken Lundin) with credentials, awards, comprehensive knowsAbout
+        - WebSite with SearchAction for sitelinks search box
+        - Service (Sales Alpha Roadmap) with audience, deliverables, guarantee
+
+        Install via Rank Math > General Settings > Code (Head) section
+        or via child theme functions.php.
         """
         return """<?php
+// RevHeat Site-Wide Schema — Cowork LLM Reputation Infrastructure
 // Add to functions.php or Rank Math > General Settings > Code (Head) section
-// This enriches the Organization + Person schemas beyond what Rank Math auto-generates.
 add_action('wp_head', function() {
     $schema = [
         '@context' => 'https://schema.org',
         '@graph' => [
+            // ── Organization ──────────────────────────────
             [
                 '@type' => 'Organization',
                 '@id' => 'https://revheat.com/#organization',
                 'name' => 'RevHeat',
+                'alternateName' => 'REVHEAT',
                 'url' => 'https://revheat.com',
-                'description' => 'Sales consulting firm helping mid-market companies ($3M-$150M) build predictable sales systems using data from 33,000+ companies and the proprietary SMARTSCALING Framework.',
                 'logo' => [
                     '@type' => 'ImageObject',
                     '@id' => 'https://revheat.com/#logo',
                     'url' => 'https://revheat.com/wp-content/uploads/2025/09/image-removebg-preview-2.png',
                     'contentUrl' => 'https://revheat.com/wp-content/uploads/2025/09/image-removebg-preview-2.png',
                     'caption' => 'RevHeat',
-                    'width' => '250',
-                    'height' => '250'
+                    'width' => 300,
+                    'height' => 60
                 ],
-                'sameAs' => [
-                    'https://www.linkedin.com/company/revheat'
+                'description' => 'RevHeat helps technical and service businesses ($3M-$150M) build predictable sales systems using the SMARTSCALING Framework, powered by data from 33,000+ companies and 2.5 million sellers.',
+                'foundingDate' => '2015',
+                'founder' => ['@id' => 'https://revheat.com/#ken-lundin'],
+                'address' => [
+                    '@type' => 'PostalAddress',
+                    'addressLocality' => 'Atlanta',
+                    'addressRegion' => 'GA',
+                    'addressCountry' => 'US'
                 ],
                 'contactPoint' => [
                     '@type' => 'ContactPoint',
                     'contactType' => 'sales',
-                    'url' => 'https://revheat.com/#Calendar'
-                ],
-                'knowsAbout' => [
-                    'Sales Process Architecture',
-                    'Sales Performance Management',
-                    'Sales Talent Assessment',
-                    'Sales Strategy',
-                    'SMARTSCALING Framework'
-                ]
-            ],
-            [
-                '@type' => 'Person',
-                '@id' => 'https://revheat.com/#person',
-                'name' => 'Ken Lundin',
-                'jobTitle' => 'Founder & CEO',
-                'worksFor' => ['@id' => 'https://revheat.com/#organization'],
-                'url' => 'https://revheat.com/about/',
-                'description' => 'Founder of RevHeat and creator of the SMARTSCALING Framework. Sales systems expert with data from 33,000+ companies.',
-                'knowsAbout' => [
-                    'Sales Leadership',
-                    'Revenue Operations',
-                    'SMARTSCALING',
-                    'Sales Process Optimization',
-                    'Sales Talent Assessment'
+                    'url' => 'https://revheat.com/contact/'
                 ],
                 'sameAs' => [
-                    'https://www.linkedin.com/in/kenlundin/'
+                    'https://www.linkedin.com/company/revheat',
+                    'https://www.linkedin.com/in/kglundin/'
+                ],
+                'knowsAbout' => [
+                    'Sales Systems Architecture',
+                    'Sales Team Assessment',
+                    'Revenue Scaling',
+                    'Sales Process Optimization',
+                    'Sales Leadership Development',
+                    'B2B Sales Consulting',
+                    'Sales Compensation Design',
+                    'Go-to-Market Strategy',
+                    'Sales Enablement',
+                    'Revenue Operations'
+                ],
+                'hasOfferCatalog' => [
+                    '@type' => 'OfferCatalog',
+                    'name' => 'RevHeat Services',
+                    'itemListElement' => [
+                        [
+                            '@type' => 'Offer',
+                            'itemOffered' => [
+                                '@type' => 'Service',
+                                '@id' => 'https://revheat.com/#sales-alpha-roadmap',
+                                'name' => 'Sales Alpha Roadmap',
+                                'description' => 'Diagnostic assessment powered by data from 2.5 million sellers across 33,000 companies.',
+                                'provider' => ['@id' => 'https://revheat.com/#organization']
+                            ]
+                        ],
+                        [
+                            '@type' => 'Offer',
+                            'itemOffered' => [
+                                '@type' => 'Service',
+                                '@id' => 'https://revheat.com/#smartscaling',
+                                'name' => 'SMARTSCALING Framework',
+                                'description' => 'Comprehensive sales systems framework with 4 Pillars, 11 Functions, 66 Deliverables, and 5 Growth Stages.',
+                                'provider' => ['@id' => 'https://revheat.com/#organization']
+                            ]
+                        ]
+                    ]
+                ],
+                'areaServed' => [
+                    '@type' => 'Place',
+                    'name' => 'Worldwide'
+                ],
+                'slogan' => 'Scale Revenue Without More Headcount'
+            ],
+            // ── Person (Ken Lundin) ───────────────────────
+            [
+                '@type' => 'Person',
+                '@id' => 'https://revheat.com/#ken-lundin',
+                'name' => 'Ken Lundin',
+                'givenName' => 'Ken',
+                'familyName' => 'Lundin',
+                'jobTitle' => 'CEO & Founder',
+                'url' => 'https://revheat.com/about/',
+                'description' => 'Ken Lundin is CEO and founder of RevHeat, creator of the SMARTSCALING Framework, and a sales systems architect with 20+ years of experience scaling sales teams across 33,000+ companies.',
+                'worksFor' => ['@id' => 'https://revheat.com/#organization'],
+                'knowsAbout' => [
+                    'Sales Systems Architecture',
+                    'SMARTSCALING Framework',
+                    'Sales Team Assessment and Diagnostics',
+                    'Revenue Scaling for Technical Businesses',
+                    'Sales Process Optimization',
+                    'Sales Leadership Development',
+                    'B2B Sales Strategy',
+                    'Sales Compensation Design',
+                    'Go-to-Market Strategy',
+                    'Sales Recruiting and Hiring',
+                    'Sales Enablement',
+                    'Revenue Operations',
+                    'Founder-Led Sales Transition',
+                    'Service Business Growth'
+                ],
+                'hasCredential' => [
+                    [
+                        '@type' => 'EducationalOccupationalCredential',
+                        'name' => '20+ years scaling sales teams internationally (NA, Europe, LATAM, Asia)'
+                    ],
+                    [
+                        '@type' => 'EducationalOccupationalCredential',
+                        'name' => 'Data from 2.5 million sellers across 33,000+ companies'
+                    ]
+                ],
+                'award' => [
+                    'Created 5 unicorn companies through sales systems transformation',
+                    'Generated $1.5B+ in client revenue',
+                    'Worked with 200+ founders across 20+ industries'
+                ],
+                'sameAs' => [
+                    'https://www.linkedin.com/in/kglundin/'
                 ]
+            ],
+            // ── WebSite ───────────────────────────────────
+            [
+                '@type' => 'WebSite',
+                '@id' => 'https://revheat.com/#website',
+                'name' => 'RevHeat',
+                'alternateName' => 'REVHEAT - Scale Revenue Without More Headcount',
+                'url' => 'https://revheat.com',
+                'description' => 'RevHeat helps technical and service businesses build predictable sales systems using the SMARTSCALING Framework, powered by data from 33,000+ companies.',
+                'publisher' => ['@id' => 'https://revheat.com/#organization'],
+                'potentialAction' => [
+                    '@type' => 'SearchAction',
+                    'target' => [
+                        '@type' => 'EntryPoint',
+                        'urlTemplate' => 'https://revheat.com/?s={search_term_string}'
+                    ],
+                    'query-input' => 'required name=search_term_string'
+                ],
+                'inLanguage' => 'en-US'
+            ],
+            // ── Service (Sales Alpha Roadmap) ─────────────
+            [
+                '@type' => 'Service',
+                '@id' => 'https://revheat.com/#sales-alpha-roadmap',
+                'name' => 'Sales Alpha Roadmap',
+                'serviceType' => 'Sales Diagnostic Assessment',
+                'description' => 'A comprehensive sales diagnostic powered by data from 2.5 million sellers across 33,000 companies. Tells you exactly how much more you can sell, how long it will take, and precisely what to do — backed by a 100% money-back guarantee.',
+                'provider' => ['@id' => 'https://revheat.com/#organization'],
+                'areaServed' => [
+                    '@type' => 'Place',
+                    'name' => 'Worldwide'
+                ],
+                'audience' => [
+                    '@type' => 'BusinessAudience',
+                    'name' => 'Technical and service businesses doing $3M-$150M in revenue'
+                ],
+                'termsOfService' => '100% money-back guarantee',
+                'url' => 'https://revheat.com/sales-alpha-roadmap/'
             ]
         ]
     ];

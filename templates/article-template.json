@@ -4,9 +4,9 @@
   "isPartOf": { "@id": "{{ post_url }}" },
   "author": {
     "@type": "Person",
-    "@id": "https://revheat.com/#person",
+    "@id": "https://revheat.com/#ken-lundin",
     "name": "Ken Lundin",
-    "jobTitle": "Founder & CEO",
+    "jobTitle": "CEO & Founder",
     "url": "https://revheat.com/about/",
     "worksFor": {
       "@type": "Organization",
@@ -33,7 +33,9 @@
   },
   "image": {
     "@type": "ImageObject",
-    "url": "{{ featured_image_url }}"
+    "url": "{{ featured_image_url }}",
+    "width": 1200,
+    "height": 627
   },
   "keywords": {{ keywords | tojson }},
   "about": {
@@ -43,7 +45,7 @@
   },
   "speakable": {
     "@type": "SpeakableSpecification",
-    "cssSelector": {{ (speakable_selectors or ["#tldr", ".article-summary"]) | tojson }}
+    "cssSelector": {{ (speakable_selectors or [".key-takeaway", ".tldr", "h1"]) | tojson }}
   },
   "inLanguage": "en-US"
 }

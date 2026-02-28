@@ -433,10 +433,95 @@ Follow the V2 LLM-Optimized Template exactly. Every required element must be pre
 
         return "\n".join(lines) if lines else "- Use relevant pillar and cluster page links"
 
+    def _fix_faq_format(self, raw: str) -> str:
+        """Convert bold FAQ questions to H3 format for proper schema detection.
+
+        The LLM Citation Audit found 0% of posts use H3 for FAQ questions —
+        they all use **bold text** instead.  This breaks FAQPage schema
+        extraction and LLM Q&A pair detection.
+
+        Converts:  **What is the difference?**   →   ### What is the difference?
+        Only within the FAQ section to avoid touching other bold text.
+        """
+        # Find the FAQ section
+        faq_match = re.search(
+            r"(## (?:FAQ|Frequently Asked)[^\n]*\n)([\s\S]+?)(?=\n## |\Z)",
+            raw, re.IGNORECASE,
+        )
+        if not faq_match:
+            return raw
+
+        faq_header = faq_match.group(1)
+        faq_body = faq_match.group(2)
+
+        # Convert **Question text?** at start of line to ### Question text?
+        fixed_body = re.sub(
+            r"^\*\*(.+?)\*\*\s*$",
+            r"### \1",
+            faq_body,
+            flags=re.MULTILINE,
+        )
+
+        if fixed_body != faq_body:
+            conversions = fixed_body.count("### ") - faq_body.count("### ")
+            log.info(f"FAQ format fix: converted {conversions} bold questions to H3")
+            return raw[:faq_match.start(2)] + fixed_body + raw[faq_match.end(2):]
+
+        return raw
+
+    def _add_semantic_css_classes(self, html: str) -> str:
+        """Add CSS classes to key content blocks for speakable schema targeting.
+
+        Wraps Key Takeaway and TL;DR sections in <div> tags with CSS classes
+        that the SpeakableSpecification can target (.key-takeaway, .tldr).
+        """
+        soup = BeautifulSoup(html, "html.parser")
+
+        # Find Key Takeaway heading and wrap following content
+        for heading in soup.find_all(re.compile(r"^h[2-4]$")):
+            text = heading.get_text().lower()
+            if "key takeaway" in text:
+                wrapper = soup.new_tag("div", **{"class": "key-takeaway"})
+                # Collect elements after this heading until next heading
+                elements = []
+                for sibling in heading.find_next_siblings():
+                    if sibling.name and re.match(r"^h[1-4]$", sibling.name):
+                        break
+                    elements.append(sibling)
+                if elements:
+                    heading.insert_after(wrapper)
+                    for el in elements:
+                        wrapper.append(el.extract())
+                break
+
+        # Find TL;DR heading and wrap following content
+        for heading in soup.find_all(re.compile(r"^h[2-4]$")):
+            text = heading.get_text().lower()
+            if "tl;dr" in text or "tldr" in text:
+                wrapper = soup.new_tag("div", **{"class": "tldr"})
+                elements = []
+                for sibling in heading.find_next_siblings():
+                    if sibling.name and re.match(r"^h[1-4]$", sibling.name):
+                        break
+                    elements.append(sibling)
+                if elements:
+                    heading.insert_after(wrapper)
+                    for el in elements:
+                        wrapper.append(el.extract())
+                break
+
+        return str(soup)
+
     def _parse_draft(self, raw: str, topic: TopicSelection) -> BlogDraft:
         """Parse Claude's raw output into a structured BlogDraft."""
+        # Pre-process: fix FAQ formatting (bold → H3) for schema detection
+        raw = self._fix_faq_format(raw)
+
         # Convert markdown to HTML
         content_html = md_lib.markdown(raw, extensions=["tables", "fenced_code"])
+
+        # Add semantic CSS classes for speakable schema
+        content_html = self._add_semantic_css_classes(content_html)
 
         # Extract title (first H1 or H2)
         title_match = re.search(r"^#\s+(.+)$|^##\s+(.+)$", raw, re.MULTILINE)
@@ -1105,8 +1190,9 @@ Estimated review time: 25-30 minutes
         reading_minutes = max(1, round(draft.word_count / 238)) if draft.word_count else 5
         reading_time_iso = f"PT{reading_minutes}M"
 
-        # Build speakable passages: TL;DR + meta description (key quotable content)
-        speakable_selectors = ["#tldr", ".article-summary"]
+        # Build speakable passages: Key Takeaway + TL;DR (key quotable content)
+        # Uses CSS classes injected by _add_semantic_css_classes()
+        speakable_selectors = [".key-takeaway", ".tldr", "h1"]
         speakable_text = []
         if hasattr(draft, "tldr") and draft.tldr:
             speakable_text.append(draft.tldr)
@@ -1196,7 +1282,7 @@ Estimated review time: 25-30 minutes
         )
 
         # 11c. Set OpenGraph + Twitter Card + Canonical
-        post_url = f"https://revheat.com/blog/{draft.slug}/"
+        post_url = f"https://revheat.com/{draft.slug}/"
         featured_url = ""
         if images:
             try:
